@@ -24,7 +24,7 @@ const Navbar = () => {
     setActivePath(url);
   };
   return (
-    <nav className="w-full flex items-center justify-between py-4 md:py-8 px-3 md:px-14 ">
+    <nav className="w-full absolute top-0 left-0 shadow-sm flex items-center justify-between py-4 md:py-6 px-3 md:px-24 ">
       <Image src={"/logo.svg"} alt="" width={80} height={80} className="" />
 
       <div className="hidden lg:flex text-xl gap-12">
