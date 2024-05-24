@@ -1,4 +1,6 @@
+import Boost from "@/components/shared/Boost";
 import Features from "@/components/shared/Features";
+import Footer from "@/components/shared/Footer";
 import Hero from "@/components/shared/Hero";
 import Navbar from "@/components/shared/Navbar";
 import WorkingSection from "@/components/shared/WorkingSection";
@@ -12,6 +14,13 @@ export default function Home() {
     <Hero/>
     <Features/>
     <WorkingSection/>
+
+    {/* Pricings */}
+
+    <Boost/>
+
+    {/* Footer */}
+    <Footer/>
     </>
   );
 }

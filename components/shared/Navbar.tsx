@@ -24,48 +24,49 @@ const Navbar = () => {
     setActivePath(url);
   };
   return (
-    <nav className="w-full absolute top-0 left-0 shadow-sm flex items-center justify-between py-4 md:py-6 px-3 md:px-24 ">
-      <Image src={"/logo.svg"} alt="" width={80} height={80} className="" />
+    <header className="w-full border-b ">
+      <div className="wrapper flex items-center justify-between">
+        <Image src={"/logo.svg"} alt="Logo" width={80} height={80} />
 
-      <div className="hidden lg:flex text-xl gap-12">
-        {navItems.map((items) => (
-          <Link
-            key={items.url}
-            className={
-              activePath === items.url
-                ? "text-green-500 underline-animation active"
-                : "text-black underline-animation"
-            }
-            onClick={() => handleClick(items.url)}
-            href={items.url}
+        <div className="lg:flex-between hidden w-full max-w-xs text-xl gap-10">
+          {navItems.map((items) => (
+            <Link
+              key={items.url}
+              className={
+                activePath === items.url
+                  ? "text-green-500 underline-animation active"
+                  : "text-black underline-animation"
+              }
+              onClick={() => handleClick(items.url)}
+              href={items.url}
+            >
+              {items.name}
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            size={"lg"}
+            className="bg-green-500 text-xl px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4"
           >
-            {items.name}
-          </Link>
-        ))}
-      </div>
+            Book Now
+          </Button>
+          <div className="flex lg:hidden">
+            <Sheet>
+              <SheetTrigger className="align-middle">
+                <Menu />
+              </SheetTrigger>
+              <SheetContent className="flex flex-col gap-6 bg-white lg:hidden">
+                <SheetHeader>
+                  <Image src={"/logo.svg"} alt="Logo" width={90} height={80} />
 
-      <div className="flex items-center justify-center gap-4">
-        <Button
-          size={"lg"}
-          className="bg-green-500 text-xl px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4"
-        >
-          Book Now
-        </Button>
-        <div className="flex lg:hidden">
-          <Sheet>
-            <SheetTrigger>
-              <Menu />
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                  <div className="flex w-full flex-col text-2xl gap-4 items-start justify-center">
+                  <div className="flex w-full flex-col text-2xl gap-4 items-start justify-center uppercase font-bold">
                     {navItems.map((items) => (
                       <Link
                         key={items.url}
                         className={
-                          path === items.url
-                            ? "text-green-500"
-                            : "text-black"
+                          path === items.url ? "text-green-500" : "text-black"
                         }
                         onClick={() => handleClick(items.url)}
                         href={items.url}
@@ -74,12 +75,13 @@ const Navbar = () => {
                       </Link>
                     ))}
                   </div>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

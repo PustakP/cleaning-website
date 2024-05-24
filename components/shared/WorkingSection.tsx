@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const WorkingSection = () => {
   return (
-    <section className="w-full flex flex-col lg:flex-row justify-between items-center bg-zinc-200/40 mt-20 px-6 md:px-24 py-24">
+    <section id="how-it-works" className="w-full flex flex-col lg:flex-row justify-center gap-36 items-center bg-primary-50 mt-20 px-6 md:px-24 py-20">
       <div>
         <div className="pb-12">
           <h1 className="text-5xl font-bold text-sky-950 mb-1 text-center md:text-start">
@@ -28,7 +28,7 @@ const WorkingSection = () => {
       </div>
 
       <div className="">
-        <Image src={"/houseimage.jpg"} alt="" width={500} height={500} className="aspect-square"/>
+        <Image src={"/houseimage.jpg"} alt="" width={500} height={500} className="aspect-square rounded-lg"/>
         {/* <Image src={"/cleaning.jpg"} alt="" width={600} height={630} className=""/> */}
       </div>
     </section>
