@@ -17,9 +17,9 @@ const Hero = () => {
             service for your work!
           </h1>
           <div className="flex w-full items-center lg:items-start flex-col gap-4">
-            <div className="space-y-1 my-6">
-              {advantages.map((f) => (
-                <div key={f.adv} className="text-green-500 flex gap-2 my-1">
+            <div className="space-y-1 my-2">
+              {advantages.map((f, index ) => (
+                <div key={index} className="text-green-500 flex gap-2 my-1">
                   {checkicon}
                   <h1 className="text-sky-950/70 font-medium text-lg">
                     {f.adv}

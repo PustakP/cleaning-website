@@ -33,9 +33,9 @@ const Navbar = () => {
         </Link>
 
         <div className="lg:flex-between hidden w-full max-w-xs text-xl gap-10">
-          {navItems.map((items) => (
+          {navItems.map((items, idx) => (
             <Link
-              key={items.url}
+              key={idx}
               className={
                 activePath === items.url
                   ? "text-green-500 underline-animation active"
@@ -68,9 +68,9 @@ const Navbar = () => {
                   <Image src={"/logo.svg"} alt="Logo" width={90} height={80} />
 
                   <div className="flex w-full flex-col text-2xl gap-4 items-start justify-center uppercase font-bold">
-                    {navItems.map((items) => (
+                    {navItems.map((items, idx) => (
                       <Link
-                        key={items.url}
+                        key={idx}
                         className={
                           path === items.url ? "text-green-500" : "text-black"
                         }

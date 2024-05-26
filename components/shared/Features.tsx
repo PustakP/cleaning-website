@@ -11,9 +11,9 @@ const Features = () => {
       <p className="text-black/40 font-semibold">Reasons why we are the best</p>
 
       <div className="w-full flex gap-12 items-center justify-center mt-12 flex-wrap">
-        {features.map((item) => (
+        {features.map((item, index) => (
           <FeatureCards
-            key={item.title}
+            key={index}
             title={item.title}
             description={item.description}
             icon={item.icon}

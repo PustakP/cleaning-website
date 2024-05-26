@@ -12,4 +12,7 @@ const BookingSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
+// Define Booking Model
+const Booking = mongoose.model('Book', BookingSchema);
+
+export default Booking;

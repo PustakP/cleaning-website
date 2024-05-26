@@ -144,22 +144,22 @@ export const categories = [
   },
   {
     _id: '2',
-    name: 'Home Cleaning'
+    name: 'Office Cleaning'
   },
   {
     _id: '3',
-    name: 'Home Cleaning'
+    name: 'Town Cleaning'
   },
   {
     _id: '4',
-    name: 'Home Cleaning'
+    name: 'Dust Cleaning'
   },
   {
     _id: '5',
-    name: 'Home Cleaning'
+    name: 'After Build Cleaning'
   },
   {
     _id: '6',
-    name: 'Home Cleaning'
+    name: 'Just normal Cleaning'
   },
 ]

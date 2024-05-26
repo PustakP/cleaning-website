@@ -22,7 +22,7 @@ import { categories } from "@/constants"
         </SelectTrigger>
         <SelectContent>
           {categories.map((category) => (
-            <SelectItem key={category._id} value={category._id} className="select-item p-regular-14">
+            <SelectItem key={category._id} value={category.name} className="select-item p-regular-14">
               {category.name}
             </SelectItem>
           ))}
