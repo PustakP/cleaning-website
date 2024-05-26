@@ -1,4 +1,12 @@
-import { Calendar, CircleDollarSign, MapPin, Phone, ShieldCheck, Trash, Zap } from "lucide-react";
+import {
+  Calendar,
+  CircleDollarSign,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  Trash,
+  Zap,
+} from "lucide-react";
 
 export const navItems = [
   {
@@ -79,5 +87,79 @@ export const HowitWorks = [
     title: "We will make you go broke",
     description:
       "Lorem ipsum dolor sit amet, consectet ut labore et dolore magna aliquet er elit.",
+  },
+];
+
+export const price = [
+  {
+    label: "Door Cleaning",
+    starter: true,
+    premium: true,
+  },
+  {
+    label: "House Cleaning",
+    starter: true,
+    premium: true,
+  },
+  {
+    label: "Office Cleaning",
+    starter: true,
+    premium: true,
+  },
+  {
+    label: "Garden Cleaning",
+    starter: false,
+    premium: true,
+  },
+  {
+    label: "Residential Cleaning",
+    starter: false,
+    premium: true,
+  },
+  {
+    label: "Business Cleaning",
+    starter: false,
+    premium: true,
+  },
+];
+
+
+export const eventDefaultValues = {
+  title: '',
+  description: '',
+  location: '',
+  imageUrl: '',
+  startDateTime: new Date(),
+  endDateTime: new Date(),
+  categoryId: '',
+  price: '',
+  isFree: false,
+  url: '',
+}
+
+export const categories = [
+  {
+    _id: '1',
+    name: 'Home Cleaning'
+  },
+  {
+    _id: '2',
+    name: 'Home Cleaning'
+  },
+  {
+    _id: '3',
+    name: 'Home Cleaning'
+  },
+  {
+    _id: '4',
+    name: 'Home Cleaning'
+  },
+  {
+    _id: '5',
+    name: 'Home Cleaning'
+  },
+  {
+    _id: '6',
+    name: 'Home Cleaning'
   },
 ]

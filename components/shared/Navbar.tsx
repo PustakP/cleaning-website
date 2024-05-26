@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
+
+
 const Navbar = () => {
   const path = usePathname();
   const [activePath, setActivePath] = useState(path);
@@ -24,9 +26,11 @@ const Navbar = () => {
     setActivePath(url);
   };
   return (
-    <header className="w-full border-b ">
+    <header className={`w-full border-b`}>
       <div className="wrapper flex items-center justify-between">
-        <Image src={"/logo.svg"} alt="Logo" width={80} height={80} />
+        <Link href="/">
+          <Image src={"/logo.svg"} alt="Logo" width={80} height={80} />
+        </Link>
 
         <div className="lg:flex-between hidden w-full max-w-xs text-xl gap-10">
           {navItems.map((items) => (
@@ -46,12 +50,14 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <Button
-            size={"lg"}
-            className="bg-green-500 text-xl px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4"
-          >
-            Book Now
-          </Button>
+          <Link href="/book">
+            <Button
+              size={"lg"}
+              className="bg-green-500 text-xl px-3 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4"
+            >
+              Book Now
+            </Button>
+          </Link>
           <div className="flex lg:hidden">
             <Sheet>
               <SheetTrigger className="align-middle">
