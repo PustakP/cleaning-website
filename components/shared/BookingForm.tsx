@@ -11,8 +11,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { eventFormSchema } from "@/lib/validations/bookingform";
-import {z} from "zod";
+import { bookingschema } from "@/lib/validations/bookingform";
+import { z } from "zod";
 import Image from "next/image";
 
 import { Textarea } from "../ui/textarea";
@@ -28,6 +28,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import connectToDatabase from "@/lib/db/connectdb";
 import Booking from "@/lib/models/Booking";
+import { checkoutOrder } from "@/actions/order.action";
 
 const BookingForm = () => {
 	// const [bookedDates, setBookedDates] = useState<Date[]>([]);
@@ -45,45 +46,26 @@ const BookingForm = () => {
 	//   fetchBookedDates();
 	// }, []);
 
-	const form = useForm<z.infer<typeof eventFormSchema>>({
-		resolver: zodResolver(eventFormSchema),
+	const form = useForm<z.infer<typeof bookingschema>>({
+		resolver: zodResolver(bookingschema),
 		defaultValues: {
 			rooms: "",
 			type: "",
 			description: "",
 			location: "",
-			Date: undefined,
+			date: undefined,
 			email: "",
+			phone: "",
 		},
 	});
 
-	async function onSubmit (values: z.infer<typeof eventFormSchema>){
-    form.reset();
+	async function onSubmit(values: z.infer<typeof bookingschema>) {
+		form.reset();
 		console.log("Form submitted");
 		console.log(values);
 
-
-		// CHATGPT: Here connect to mongodb and keep the data stored in the booking model
-		// also make sure to exclude the date which are already booked
-		// try {
-		// 	const respond = await axios("api/book", {
-		// 		email: values.email,
-		// 		date: values.date,
-		// 		redirect: false,
-		// 	});
-
-		// 	if (respond!.error) {
-		// 		console.error('Registration failed:', respond!.error);
-		// 		console.log(respond)
-		// 		console.log(values)
-		// 		return
-		// 	}
-
-		// 	} catch (error) {
-		// 	  console.error('Error during registration:', error);
-		// 	}
-		// console.log(values);
-	};
+		await checkoutOrder(values)
+	}
 
 	return (
 		<Form {...form}>
@@ -124,13 +106,13 @@ const BookingForm = () => {
 						</FormItem>
 					)}
 				/>
-        <FormField
+				<FormField
 					control={form.control}
 					name="description"
 					render={({ field }) => (
 						<FormItem className="w-full">
 							<FormControl>
-                <Textarea />
+								<Textarea placeholder="Description" {...field} className="textarea rounded-2xl" />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -160,7 +142,7 @@ const BookingForm = () => {
 
 				<FormField
 					control={form.control}
-					name="Date"
+					name="date"
 					render={({ field }) => (
 						<FormItem className="w-full">
 							<FormControl>
@@ -206,11 +188,31 @@ const BookingForm = () => {
 					)}
 				/>
 
+				<FormField
+					control={form.control}
+					name="phone"
+					render={({ field }) => (
+						<FormItem className="w-full">
+							<FormControl>
+								<div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
+									<ChefHatIcon />
+									<Input
+										type="text"
+										placeholder="Phone number"
+										{...field}
+										className="p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+									/>
+								</div>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
 				<Button type={`submit`} size="lg" className="button col-span-2 w-full">
 					Book for 20$
 				</Button>
 			</form>
-      
 		</Form>
 	);
 };

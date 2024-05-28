@@ -23,7 +23,7 @@ export const navItems = [
   },
   {
     name: "Contact",
-    url: "/#contact",
+    url: "/contact",
   },
 ];
 

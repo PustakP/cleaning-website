@@ -9,10 +9,23 @@ const BookingSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  rooms: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  }
 });
 
-// Define Booking Model
-const Booking = mongoose.model('Book', BookingSchema);
+const Booking = mongoose.models.Book || mongoose.model('Book', BookingSchema);
 
 export default Booking;

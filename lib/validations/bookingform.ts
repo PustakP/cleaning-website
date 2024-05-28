@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-export const eventFormSchema = z.object({
+export const bookingschema = z.object({
   rooms: z.string(),
   type: z.string(),
   description: z
@@ -11,6 +11,7 @@ export const eventFormSchema = z.object({
     .string()
     .min(3, "Location must be at least 3 characters")
     .max(400, "Location must be less than 400 characters"),
-  Date: z.date(),
+  date: z.date(),
   email: z.string(),
+  phone: z.string(),
 });
