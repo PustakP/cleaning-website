@@ -2,6 +2,12 @@ import stripe from 'stripe'
 import { NextResponse } from 'next/server'
 import { createOrder } from '@/actions/order.action'
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
 export async function POST(request: Request) {
   const body = await request.text()
 
@@ -16,11 +22,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Webhook error', error: err })
   }
 
-  // Get the ID and type
   const eventType = event.type
 
-  // CREATE
   if (eventType === 'checkout.session.completed') {
+    console.log('Checkout session completed')
     const { id, amount_total } = event.data.object
 
     const order = {
