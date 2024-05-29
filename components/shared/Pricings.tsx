@@ -27,7 +27,7 @@ const Pricings = () => {
           </div>
           <div className="p-6 sm:px-8">
             <p className="text-lg font-medium text-gray-900 sm:text-xl">
-              What's included:
+              What&apos;s included:
             </p>
             <ul className="mt-2 space-y-2 sm:mt-4">
               {price.map((price, idx) => {

@@ -13,7 +13,7 @@ export default function Component() {
 					<h1 className="text-3xl font-bold mb-4">Get in Touch</h1>
 					<p className="text-gray-500 dark:text-gray-400 mb-8">
 						Have a question or want to work together? Fill out the form below
-						and we'll get back to you as soon as possible.
+						and we&apos;ll get back to you as soon as possible.
 					</p>
 					<form className="space-y-4">
 						<div className="grid grid-cols-2 gap-4">
