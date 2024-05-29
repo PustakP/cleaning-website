@@ -5,9 +5,11 @@ import Booking from "@/lib/models/Booking";
 import { redirect } from "next/navigation";
 
 export const checkoutOrder = async () => {
-	const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+	const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+		apiVersion: "2024-04-10",
+	});
 
-	const price = 20 * 100; // Assuming price is $20
+	const price = 20 * 100;
 
 	try {
 		const session = await stripe.checkout.sessions.create({
@@ -25,7 +27,7 @@ export const checkoutOrder = async () => {
 			],
 			mode: "payment",
 			success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-success`,
-			cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+			cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-failed`,
 		});
 
 		redirect(session.url!);

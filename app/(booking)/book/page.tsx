@@ -3,36 +3,11 @@ import Navbar from "@/components/shared/Navbar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import './book.module.css';
 
 const BookingPage = () => {
 	return (
 		<>
-			{/* <Navbar />
-			<section className="">
-				<div className="flex-between wrapper max-h-screen">
-					<main className="flex flex-col lg:flex-row lg:justify-center lg:gap-10 mt-16 px-10 py-20 lg:px-32 ">
-						<div className="flex flex-col items-center lg:items-start w-full lg:w-1/2">
-							<h1 className="h3-bold text-sky-950 ">Book The Service</h1>
-							<Link href={"/"}>
-								<p className="p-semibold text-gray-400 hover:text-primary transition">
-									Go Back
-								</p>
-							</Link>
-							<BookingForm />
-						</div>
-						<div className="hidden lg:flex justify-center items-center w-full lg:w-1/2">
-							<Image
-								src={"/booking.svg"}
-								alt=""
-								width={500}
-								height={500}
-								className="object-cover"
-							/>
-						</div>
-					</main>
-				</div>
-			</section> */}
-
 			<section className="">
 				<Navbar />
 				<div className="flex-between wrapper max-h-screen mt-16">
@@ -61,6 +36,7 @@ const BookingPage = () => {
 							/>
 						</div> */}
 					</main>
+					{/* here is ur workspace file this is the page take a look at it and fix it ur self im fixing the stripe payment backend */}
 				</div>
 			</section>
 		</>

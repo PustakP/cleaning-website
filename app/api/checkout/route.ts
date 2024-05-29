@@ -38,6 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
 
+      try {
+        if ({}) {
+        }
+      } catch (error) {
+        
+      }
       res.status(200).json({ id: session.id });
     } catch (err) {
       console.error("Error creating checkout session", err);

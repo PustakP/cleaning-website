@@ -2,9 +2,7 @@
 
 import { NextResponse } from "next/server";
 import stripe from "stripe";
-import { buffer } from "micro";
-import connectToDatabase from "@/lib/db/connectdb";
-import Booking from "@/lib/models/Booking";
+
 
 
 export async function POST(request: Request) {
@@ -14,6 +12,7 @@ export async function POST(request: Request) {
 	const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 	let event;
+
 
 	try {
 		event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
@@ -30,24 +29,14 @@ export async function POST(request: Request) {
 		const metadata = session.metadata;
 
 		if (metadata) {
-			const { rooms, type, description, location, date, email, phone } =
-				metadata;
-			await connectToDatabase();
-
-			const newBooking = new Booking({
-				rooms,
-				type,
-				description,
-				location,
-				date,
-				email,
-				phone,
-			});
-
+			const { rooms, type, description, location, date, email, phone } = metadata;
+			
+			console.log(rooms , type , description , location , date , email , phone)
 			try {
-				await newBooking.save();
-				console.log("Booking saved:", newBooking);
-			} catch (error) {
+				console.log(metadata)
+				console.log("Booking saved:", metadata);
+			} catch (error) { 
+				//test dont mess around here bitch go to app>book>page.tsx and do the layouts dem
 				console.error("Error saving booking:", error);
 			}
 		} else {

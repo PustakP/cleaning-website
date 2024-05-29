@@ -21,6 +21,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useState } from "react";
 import { Textarea } from "../ui/textarea";
+import { createOrder } from "@/actions/order.action";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -49,11 +50,15 @@ const BookingForm = () => {
 
       const response = await axios.post("/api/checkout", values);
 
-      if (response.status === 200) {
+      if (response) {
         const sessionId = response.data.id;
         stripe?.redirectToCheckout({ sessionId });
+
+		const newOrder = await createOrder(values);
+
+		console.log(newOrder);
       } else {
-        console.error("Error creating checkout session:", response.data);
+        console.error("Error creating checkout session:", response);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
