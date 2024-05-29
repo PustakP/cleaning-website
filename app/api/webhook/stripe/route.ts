@@ -1,20 +1,11 @@
 // /app/api/webhook/stripe/route.ts
 
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import stripe from "stripe";
 import { buffer } from "micro";
 import connectToDatabase from "@/lib/db/connectdb";
 import Booking from "@/lib/models/Booking";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-	apiVersion: "2024-04-10",
-});
-
-export const config = {
-	api: {
-		bodyParser: true,
-	},
-};
 
 export async function POST(request: Request) {
 	const payload = await request.text();
@@ -35,7 +26,7 @@ export async function POST(request: Request) {
 
 	console.log(event.type);
 	if (event.type === "checkout.session.completed") {
-		const session = event.data.object as Stripe.Checkout.Session;
+		const session = event.data.object;
 		const metadata = session.metadata;
 
 		if (metadata) {
