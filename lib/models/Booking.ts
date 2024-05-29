@@ -1,31 +1,30 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const BookingSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  rooms: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  }
+interface IBooking extends Document {
+  rooms: number;
+  type: string;
+  description: string;
+  location: string;
+  date: Date;
+  email: string;
+  phone: string;
+  stripeSessionId: string;
+  createdAt: Date;
+}
+
+const BookingSchema: Schema = new Schema({
+  rooms: { type: Number, required: true },
+  type: { type: String, required: true },
+  description: { type: String, required: true },
+  location: { type: String, required: true },
+  date: { type: Date, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  stripeSessionId: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
-const Booking = mongoose.models.Book || mongoose.model('Book', BookingSchema);
+const Booking: Model<IBooking> = mongoose.models.Book || mongoose.model<IBooking>('Book', BookingSchema);
 
 export default Booking;
+export type { IBooking };

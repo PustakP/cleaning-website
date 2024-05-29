@@ -1,17 +1,13 @@
-import {z} from "zod";
+import { z } from 'zod';
 
 export const bookingschema = z.object({
-  rooms: z.string(),
-  type: z.string(),
-  description: z
-    .string()
-    .min(3, "Description must be at least 3 characters")
-    .max(400, "Description must be less than 400 characters"),
-  location: z
-    .string()
-    .min(3, "Location must be at least 3 characters")
-    .max(400, "Location must be less than 400 characters"),
-  date: z.date(),
-  email: z.string(),
-  phone: z.string(),
+  rooms: z.string().min(1, { message: "Number of rooms must be at least 1" }),
+  type: z.string().min(1, { message: "Type is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  location: z.string().min(1, { message: "Location is required" }),
+  date: z.date().nullable().refine(date => date !== null, {
+    message: "Date is required",
+  }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().min(10, { message: "Phone number is required" }),
 });

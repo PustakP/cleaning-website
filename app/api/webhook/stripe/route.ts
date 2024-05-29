@@ -1,48 +1,57 @@
-// /app/api/webhook/stripe/route.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+import { buffer } from 'micro';
+import Stripe from 'stripe';
+import Booking, { IBooking } from '@/lib/models/Booking';
+import mongoose from 'mongoose';
 
-import { NextResponse } from "next/server";
-import stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-04-10',
+});
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-export async function POST(request: Request) {
-	const payload = await request.text();
-	const res = JSON.parse(payload);
-	const sig = request.headers.get("stripe-signature") as string;
-	const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!mongoose.connection.readyState) {
+    await mongoose.connect(process.env.MONGODB_URI!);
+  }
 
-	let event;
+  const buf = await buffer(req);
+  const sig = req.headers['stripe-signature'] as string;
 
+  let event: Stripe.Event;
 
-	try {
-		event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
-	} catch (err) {
-		return NextResponse.json(
-			{ message: "Webhook error", error: err },
-			{ status: 400 }
-		);
-	}
+  try {
+    event = stripe.webhooks.constructEvent(buf.toString(), sig, endpointSecret);
+  } catch (err) {
+    console.log(`⚠️  Webhook signature verification failed.`, err);
+    return res.status(400).send(`Webhook Error: ${err}`);
+  }
 
-	console.log(event.type);
-	if (event.type === "checkout.session.completed") {
-		const session = event.data.object;
-		const metadata = session.metadata;
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object as Stripe.Checkout.Session;
 
-		if (metadata) {
-			const { rooms, type, description, location, date, email, phone } = metadata;
-			
-			console.log(rooms , type , description , location , date , email , phone)
-			try {
-				console.log(metadata)
-				console.log("Booking saved:", metadata);
-			} catch (error) { 
-				//test dont mess around here bitch go to app>book>page.tsx and do the layouts dem
-				console.error("Error saving booking:", error);
-			}
-		} else {
-			console.error("Metadata is null in the checkout session.");
-		}
-	}
+    // Create booking record
+    const newBooking = new Booking({
+      rooms: parseInt(session.metadata?.rooms || "0", 10),
+      type: session.metadata?.type,
+      description: session.metadata?.description,
+      location: session.metadata?.location,
+      date: session.metadata?.date ? new Date(session.metadata.date) : new Date(),
+      email: session.metadata?.email,
+      phone: session.metadata?.phone,
+      stripeSessionId: session.id,
+    });
 
-	return NextResponse.json({ received: true }, { status: 200 });
-}
+    await newBooking.save();
+  }
+
+  res.status(200).json({ received: true });
+};
+
+export default handler;
