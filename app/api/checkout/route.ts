@@ -14,6 +14,7 @@ export async function POST(request: Request) {
   const price = 20 * 100;
 
   try {
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
       ],
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-failed`,
       metadata: {
         rooms,
         type,
