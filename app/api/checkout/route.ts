@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { rooms, type, description, location, date, email, phone } = body;
 
-  const price = 20 * 100; // Assuming price is $20
+  const price = 20 * 100;
 
   try {
     const session = await stripe.checkout.sessions.create({
