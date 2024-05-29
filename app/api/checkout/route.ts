@@ -1,42 +1,50 @@
-import stripe from 'stripe'
-import { NextResponse } from 'next/server'
-import { createOrder } from '@/actions/order.action'
+// /app/api/create-checkout-session/route.ts
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-04-10",
+});
 
 export async function POST(request: Request) {
-  const body = await request.text()
+  const body = await request.json();
+  const { rooms, type, description, location, date, email, phone } = body;
 
-  const sig = request.headers.get('stripe-signature') as string
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
-
-  let event
+  const price = 20 * 100; // Assuming price is $20
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
-  } catch (err) {
-    return NextResponse.json({ message: 'Webhook error', error: err })
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            unit_amount: price,
+            product_data: {
+              name: "Cleaning",
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+      metadata: {
+        rooms,
+        type,
+        description,
+        location,
+        date: date.toString(),
+        email,
+        phone,
+      },
+    });
+
+    return NextResponse.json({ id: session.id });
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    return NextResponse.json({ error: "Error creating checkout session" }, { status: 500 });
   }
-
-  const eventType = event.type
-
-  if (eventType === 'checkout.session.completed') {
-    console.log('Checkout session completed')
-    const { id, amount_total } = event.data.object
-
-    const order = {
-        stripeId: id,
-        totalAmount: amount_total ? (amount_total / 100).toString() : '0',
-        createdAt: new Date(),
-    }
-
-    const newOrder = await createOrder(order)
-    return NextResponse.json({ message: 'OK', order: newOrder })
-  }
-
-  return new Response('', { status: 200 })
 }

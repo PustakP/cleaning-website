@@ -13,24 +13,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { bookingschema } from "@/lib/validations/bookingform";
 import { z } from "zod";
-import Image from "next/image";
-
-import { Textarea } from "../ui/textarea";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import Dropdown from "./Dropdown";
 import { Calendar, ChefHatIcon, Map } from "lucide-react";
-
-import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import connectToDatabase from "@/lib/db/connectdb";
-import Booking from "@/lib/models/Booking";
-import { checkoutOrder } from "@/actions/order.action";
+import { useState } from "react";
+import { Textarea } from "../ui/textarea";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const BookingForm = () => {
+	const [loading, setLoading] = useState(false);
 	// const [bookedDates, setBookedDates] = useState<Date[]>([]);
 
 	// useEffect(() => {
@@ -61,10 +56,26 @@ const BookingForm = () => {
 
 	async function onSubmit(values: z.infer<typeof bookingschema>) {
 		form.reset();
+		setLoading(true);
 		console.log("Form submitted");
 		console.log(values);
 
-		await checkoutOrder(values)
+		try {
+			const stripe = await stripePromise;
+
+			const response = await axios.post("/api/checkout", values);
+
+			if (response.status === 200) {
+				const sessionId = response.data.id;
+				stripe?.redirectToCheckout({ sessionId });
+			} else {
+				console.error("Error creating checkout session:", response.data);
+			}
+		} catch (error) {
+			console.error("Error submitting form:", error);
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
