@@ -1,51 +1,50 @@
-// /app/api/create-checkout-session/route.ts
-
-import { NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-04-10",
 });
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  const { rooms, type, description, location, date, email, phone } = body;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "POST") {
+    const { rooms, type, description, location, date, email, phone } = req.body;
 
-  const price = 20 * 100;
-
-  try {
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            unit_amount: price,
-            product_data: {
-              name: "Cleaning",
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Booking Fee",
+              },
+              unit_amount: 2000, // $20.00
             },
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        mode: "payment",
+        success_url: `${req.headers.origin}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/checkout-failed`,
+        metadata: {
+          rooms,
+          type,
+          description,
+          location,
+          date,
+          email,
+          phone,
         },
-      ],
-      mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout-failed`,
-      metadata: {
-        rooms,
-        type,
-        description,
-        location,
-        date: date.toString(),
-        email,
-        phone,
-      },
-    });
+      });
 
-    return NextResponse.json({ id: session.id });
-  } catch (error) {
-    console.error("Error creating checkout session:", error);
-    return NextResponse.json({ error: "Error creating checkout session" }, { status: 500 });
+      res.status(200).json({ id: session.id });
+    } catch (err) {
+      console.error("Error creating checkout session", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  } else {
+    res.setHeader("Allow", "POST");
+    res.status(405).end("Method Not Allowed");
   }
 }
