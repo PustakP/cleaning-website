@@ -36,7 +36,7 @@ const BookingForm = () => {
       type: "",
       description: "",
       location: "",
-      date: undefined,
+      date: null,
       email: "",
       phone: "",
     },

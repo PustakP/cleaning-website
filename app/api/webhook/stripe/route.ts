@@ -8,12 +8,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-04-10',
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
