@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${req.nextUrl.origin}/success`,
-      cancel_url: `${req.nextUrl.origin}/cancel`,
+      success_url: `${req.nextUrl.origin}/checkout-success`,
+      cancel_url: `${req.nextUrl.origin}/checkout-failed`,
     });
 
     return NextResponse.json({ url: session.url });

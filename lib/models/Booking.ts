@@ -8,7 +8,6 @@ interface IBooking extends Document {
   date: Date;
   email: string;
   phone: string;
-  stripeSessionId: string;
   createdAt: Date;
 }
 
@@ -20,7 +19,6 @@ const BookingSchema: Schema = new Schema({
   date: { type: Date, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true },
-  stripeSessionId: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
