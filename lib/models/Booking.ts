@@ -24,5 +24,5 @@ const BookingSchema: Schema = new Schema({
 
 const Booking: Model<IBooking> = mongoose.models.Book || mongoose.model<IBooking>('Book', BookingSchema);
 
-export default Booking;
 export type { IBooking };
+export default Booking;

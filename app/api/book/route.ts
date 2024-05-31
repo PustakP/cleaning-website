@@ -1,3 +1,5 @@
+// i just tried creating the backend api but seems to not working
+
 import connectToDatabase from "@/lib/db/connectdb";
 import Booking from "@/lib/models/Booking";
 

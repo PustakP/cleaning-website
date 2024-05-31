@@ -28,8 +28,10 @@ import { useRouter } from "next/navigation";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const BookingForm = () => {
+	// loading
 	const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  
+	// this is the form the schema is there in lib/validation folder
 	const form = useForm<z.infer<typeof bookingschema>>({
 		resolver: zodResolver(bookingschema),
 		defaultValues: {
@@ -43,11 +45,16 @@ const BookingForm = () => {
 		},
 	});
 
+	// the main thing for you to mess with only this function 
 	async function onSubmit(values: z.infer<typeof bookingschema>) {
 		setLoading(true);
     console.log(values)
+
+	// setup stripe payment when payment is successful the values will be stored in the database
+
 	}
 
+	// dont mess with this if not required lol
 	return (
 		<Form {...form}>
 			<form

@@ -1,3 +1,9 @@
+// i tried creating the stripe but seems to not working properly
+
+
+// make sure if u create the webhooks use this path <https://localhost:3000/api/webhook/stripe>
+// under that create the route.ts file to listen to stripe events
+
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
