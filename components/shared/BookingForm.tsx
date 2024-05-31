@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { bookingschema } from "@/lib/validations/bookingform";
@@ -28,39 +28,67 @@ import { useRouter } from "next/navigation";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const BookingForm = () => {
-	// loading
-	const [loading, setLoading] = useState(false);
-  
-	// this is the form the schema is there in lib/validation folder
-	const form = useForm<z.infer<typeof bookingschema>>({
-		resolver: zodResolver(bookingschema),
-		defaultValues: {
-			rooms: "",
-			type: "",
-			description: "",
-			location: "",
-			date: null,
-			email: "",
-			phone: "",
-		},
-	});
+  // loading
+  const [loading, setLoading] = useState(false);
 
-	// the main thing for you to mess with only this function 
-	async function onSubmit(values: z.infer<typeof bookingschema>) {
-		setLoading(true);
-    console.log(values)
+  // this is the form the schema is there in lib/validation folder
+  const form = useForm<z.infer<typeof bookingschema>>({
+    resolver: zodResolver(bookingschema),
+    defaultValues: {
+      rooms: "",
+      type: "",
+      description: "",
+      location: "",
+      date: null,
+      email: "",
+      phone: "",
+    },
+  });
 
-	// setup stripe payment when payment is successful the values will be stored in the database
+  // the main thing for you to mess with only this function || done :p
 
-	}
+  async function onSubmit(values: z.infer<typeof bookingschema>) {
+    setLoading(true);
+    console.log(values);
 
-	// dont mess with this if not required lol
-	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-5 wrapper"
-			>
+    try {
+      const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+      const stripe = await stripePromise;
+
+      const response = await axios.post("/api/checkout", {
+        // Pass any necessary data for the checkout session
+        amount: 2000, // Amount in cents (20.00 USD)
+        // You can also pass other data like customer information, order details, etc.
+      });
+
+	  if (!stripe) {
+		console.error('Failed to initialize Stripe');
+		return;
+	  } // If Stripe failed to initialize, handle it here
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: response.data.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+        // Handle error
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // dont mess with this if not required lol
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-5 wrapper"
+      >
 				<FormField
 					control={form.control}
 					name="rooms"
@@ -201,17 +229,17 @@ const BookingForm = () => {
 					)}
 				/>
 
-				<Button
-					type="submit"
-					size="lg"
-					className="button col-span-2 w-full"
-					disabled={loading}
-				>
-					{loading ? "Booking..." : "Book for 20$"}
-				</Button>
-			</form>
-		</Form>
-	);
+<Button
+          type="submit"
+          size="lg"
+          className="button col-span-2 w-full"
+          disabled={loading}
+        >
+          {loading ? "Booking..." : "Book for 20$"}
+        </Button>
+      </form>
+    </Form>
+  );
 };
 
 export default BookingForm;
