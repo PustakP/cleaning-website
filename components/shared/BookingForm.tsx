@@ -48,38 +48,37 @@ const BookingForm = () => {
   // the main thing for you to mess with only this function || done :p
 
   async function onSubmit(values: z.infer<typeof bookingschema>) {
-    setLoading(true);
-    console.log(values);
-
-    try {
-      const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-      const stripe = await stripePromise;
-
-      const response = await axios.post("/api/checkout", {
-        // Pass any necessary data for the checkout session
-        amount: 2000, // Amount in cents (20.00 USD)
-        // You can also pass other data like customer information, order details, etc.
-      });
-
+	setLoading(true);
+	console.log(values);
+  
+	try {
+	  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+	  const stripe = await stripePromise;
+  
+	  const response = await axios.post("/api/checkout", {
+		amount: 2000, // Amount in cents (20.00 USD)
+		formValues: values, // Pass the form values to the server
+	  });
+  
 	  if (!stripe) {
 		console.error('Failed to initialize Stripe');
 		return;
-	  } // If Stripe failed to initialize, handle it here
-
-      const result = await stripe.redirectToCheckout({
-        sessionId: response.data.id,
-      });
-
-      if (result.error) {
-        console.error(result.error.message);
-        // Handle error
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle error
-    } finally {
-      setLoading(false);
-    }
+	  }
+  
+	  const result = await stripe.redirectToCheckout({
+		sessionId: response.data.id,
+	  });
+  
+	  if (result.error) {
+		console.error(result.error.message);
+		// Handle error
+	  }
+	} catch (error) {
+	  console.error(error);
+	  // Handle error
+	} finally {
+	  setLoading(false);
+	}
   }
 
   // dont mess with this if not required lol

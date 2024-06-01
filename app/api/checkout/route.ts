@@ -38,18 +38,19 @@
 
 
 // wrote new route
-
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import connectToDatabase from "@/lib/db/connectdb";
+import Booking from "@/lib/models/Booking";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-04-10", 
+  apiVersion: "2024-04-10",
 });
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { amount } = body;
+    const { amount, formValues } = await req.json();
+    await connectToDatabase(); // Connect to the MongoDB database
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -69,6 +70,11 @@ export async function POST(req: Request) {
       success_url: `${req.headers.get("origin")}/checkout-success`,
       cancel_url: `${req.headers.get("origin")}/checkout-failed`,
     });
+
+    // Create a new booking document in the database after a successful payment
+    const newBooking = await Booking.create(formValues);
+
+    console.log("Booking created successfully:", newBooking);
 
     return NextResponse.json(session);
   } catch (error) {
